@@ -13,8 +13,8 @@ import org.springframework.beans.BeanUtils;
 public class Payment {
 
     @Id
-    private String id; // 외상ID (memberId_startDate_paymentDate)
-    private long paymentDate; // 갚은 날짜
+    private String id; // 결제ID (memberId_startDate_paymentDate)
+    private long paymentDate; // 결제 날짜
     private int paymentPrice; // 지불액
 
     private String memberId; // 회원ID

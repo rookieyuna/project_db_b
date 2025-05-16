@@ -18,7 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class MemberService {
 
-    private final MemberJpaStore memberStore;
+    private final MemberJpaStore memberJpaStore;
 
     public long registerMember(MemberCdo memberCdo) {
         Member member = new Member(memberCdo);
@@ -26,30 +26,27 @@ public class MemberService {
         member.setRegisteredDate(System.currentTimeMillis());
         member.setStatus(true);
 
-        return memberStore.create(member);
+        return memberJpaStore.create(member);
     }
 
     public long modifyMember(MemberUdo memberUdo) {
-        Member member = memberStore.retrieve(memberUdo.getId())
-                .orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다."));
-        member.setName(memberUdo.getName());
-        member.setPhone(memberUdo.getPhone());
-        member.setStatus(memberUdo.isStatus());
+        Member member = findMemberById(memberUdo.getId());
 
-        return memberStore.update(member);
+        member.modifyAttributes(memberUdo);
+        return memberJpaStore.update(member);
     }
 
     public List<Member> findMembers() {
-        return memberStore.retrieveAll();
+        return memberJpaStore.retrieveAll();
     }
 
     public Member findMemberById(long memberId) {
-        Optional<Member> memberOpt = memberStore.retrieve(memberId);
+        Optional<Member> memberOpt = memberJpaStore.retrieve(memberId);
         return memberOpt.orElseThrow(() -> new NotFoundException("회원이 존재하지 않습니다."));
     }
 
     public PageResponse<Member> findMembersByPage(Pageable pageable) {
-        Page<Member> page = memberStore.retrieveList(pageable);
+        Page<Member> page = memberJpaStore.retrieveList(pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -60,7 +57,7 @@ public class MemberService {
     }
 
     public PageResponse<Member> findMembersByAddress(String address, Pageable pageable) {
-        Page<Member> page = memberStore.retrieveListByAddress(address, pageable);
+        Page<Member> page = memberJpaStore.retrieveListByAddress(address, pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -71,10 +68,10 @@ public class MemberService {
     }
 
     public void removeMember(long memberId) {
-        memberStore.delete(memberId);
+        memberJpaStore.delete(memberId);
     }
 
     public boolean isMemberExists(long memberId) {
-        return memberStore.exists(memberId);
+        return memberJpaStore.exists(memberId);
     }
 }

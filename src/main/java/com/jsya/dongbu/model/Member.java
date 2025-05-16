@@ -1,6 +1,7 @@
 package com.jsya.dongbu.model;
 
 import com.jsya.dongbu.model.sdo.MemberCdo;
+import com.jsya.dongbu.model.sdo.MemberUdo;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,9 @@ public class Member {
 
     public static String genId() {
         return UUID.randomUUID().toString();
+    }
+
+    public void modifyAttributes(MemberUdo memberUdo) {
+        BeanUtils.copyProperties(memberUdo, this);
     }
 }

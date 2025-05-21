@@ -1,6 +1,8 @@
 package com.jsya.dongbu.model;
 
 import com.jsya.dongbu.model.sdo.PaymentCdo;
+import com.jsya.dongbu.model.sdo.PaymentUdo;
+import com.jsya.dongbu.model.sdo.ProductUdo;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,7 @@ public class Payment {
     private long paymentDate; // 결제 날짜
     private int paymentPrice; // 지불액
 
-    private String memberId; // 회원ID
+    private long memberId; // 회원ID
     private String historyId; // 히스토리ID
 
     public Payment(PaymentCdo paymentCdo){
@@ -26,5 +28,9 @@ public class Payment {
 
     public static String genId(String historyId, long paymentDate) {
         return historyId + '_' + paymentDate;
+    }
+
+    public void modifyAttributes(PaymentUdo paymentUdo) {
+        BeanUtils.copyProperties(paymentUdo, this);
     }
 }

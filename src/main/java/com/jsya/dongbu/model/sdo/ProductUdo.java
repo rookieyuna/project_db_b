@@ -11,8 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCdo {
+public class ProductUdo {
 
+    private String id; // 제품ID (memberId_startDate_label)
     private int label;
     private OrderType orderType;
     private ProductType productType;
@@ -23,11 +24,4 @@ public class ProductCdo {
     private String color;
     private boolean premiumYn;
     private int price;
-
-    private long memberId;
-    private String historyId;
-
-    public String genId() {
-        return Product.genId(historyId, label);
-    }
 }

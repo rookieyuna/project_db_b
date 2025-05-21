@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MemberRepository extends JpaRepository<MemberJpo, Long> {
-    List<MemberJpo> findAll();
     List<MemberJpo> findByNameContains(String name);
     Page<MemberJpo> findByAddressContains(String address, Pageable pageable);
 }

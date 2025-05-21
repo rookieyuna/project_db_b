@@ -37,5 +37,4 @@ public class History {
     public void modifyAttributes(HistoryUdo historyUdo) {
         BeanUtils.copyProperties(historyUdo, this);
     }
-
 }

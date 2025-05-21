@@ -1,6 +1,8 @@
 package com.jsya.dongbu.model;
 
+import com.jsya.dongbu.model.sdo.HistoryUdo;
 import com.jsya.dongbu.model.sdo.ProductCdo;
+import com.jsya.dongbu.model.sdo.ProductUdo;
 import com.jsya.dongbu.model.vo.*;
 import jakarta.persistence.Id;
 import lombok.Getter;
@@ -26,6 +28,7 @@ public class Product {
     private boolean premiumYn;
     private int price;
 
+    private long memberId;
     private String historyId;
 
     public Product(ProductCdo productCdo){
@@ -34,5 +37,9 @@ public class Product {
 
     public static String genId(String historyId, int label) {
         return historyId + '_' + label;
+    }
+
+    public void modifyAttributes(ProductUdo productUdo) {
+        BeanUtils.copyProperties(productUdo, this);
     }
 }

@@ -21,9 +21,9 @@ public class MemberJpo {
     private long id;
     @Column (length = 200, nullable = false)
     private String address;
-    @Column(length = 20, nullable = true)
+    @Column(length = 50, nullable = true)
     private String name;
-    @Column(length = 20, nullable = true)
+    @Column(length = 50, nullable = true)
     private String phone;
     private boolean status;
     private long registeredDate;

@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,9 +18,9 @@ import org.springframework.beans.BeanUtils;
 public class HistoryRdo {
 
     private String id; // 히스토리ID (memberId_startDate)
-    private Long startDate;// 맡긴날짜
-    private Long endDate; // 찾은날짜
-    private Long bookDate; // 예약날짜
+    private LocalDateTime startDate;// 맡긴날짜
+    private LocalDateTime endDate; // 찾은날짜
+    private LocalDateTime bookDate; // 예약날짜
     private int totalPrice;
 
     private boolean debtYn;

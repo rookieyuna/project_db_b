@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class Payment {
 
     @Id
     private String id; // 결제ID (memberId_startDate_paymentDate)
-    private long paymentDate; // 결제 날짜
+    private LocalDateTime paymentDate; // 결제 날짜
     private int paymentPrice; // 지불액
 
     private long memberId; // 회원ID
@@ -27,7 +29,7 @@ public class Payment {
         BeanUtils.copyProperties(paymentCdo, this);
     }
 
-    public static String genId(String historyId, long paymentDate) {
+    public static String genId(String historyId, LocalDateTime paymentDate) {
         return historyId + '_' + paymentDate;
     }
 

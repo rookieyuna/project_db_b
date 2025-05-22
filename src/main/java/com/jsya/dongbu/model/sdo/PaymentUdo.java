@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,6 +15,6 @@ import lombok.Setter;
 public class PaymentUdo {
 
     private String id; // 결제ID (memberId_startDate_paymentDate)
-    private long paymentDate; // 갚은 날짜
+    private LocalDateTime paymentDate; // 갚은 날짜
     private int paymentPrice; // 지불액
 }

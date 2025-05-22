@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class PaymentJpo {
 
     @Id
     private String id; // 결제ID (memberId_startDate_paymentDate)
-    private long paymentDate; // 결제 날짜
+    private LocalDateTime paymentDate; // 결제 날짜
     private int paymentPrice; // 지불액
 
     @Column(nullable = false)

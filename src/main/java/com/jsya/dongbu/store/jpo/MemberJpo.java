@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class MemberJpo {
     @Column(length = 50, nullable = true)
     private String phone;
     private boolean status;
-    private long registeredDate;
+    private LocalDateTime registeredDate;
 
     public MemberJpo(Member member) {
         BeanUtils.copyProperties(member, this);

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -23,7 +24,7 @@ public class Member {
     private String name;
     private String phone;
     private boolean status; // 가용상태
-    private long registeredDate; // 가입일
+    private LocalDateTime registeredDate; // 가입일
 
     public Member(MemberCdo memberCdo){
         BeanUtils.copyProperties(memberCdo, this);

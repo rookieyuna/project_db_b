@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class HistoryCdo {
 
-    private Long bookDate; // 예약날짜
+    private LocalDateTime bookDate; // 예약날짜
     private boolean cardYn; // 카드여부
 
     private long memberId;
@@ -21,7 +23,7 @@ public class HistoryCdo {
 
     private PaymentCdo paymentCdo;
 
-    public String genId(long startDate) {
+    public String genId(LocalDateTime startDate) {
         return History.genId(memberId, startDate);
     }
 }

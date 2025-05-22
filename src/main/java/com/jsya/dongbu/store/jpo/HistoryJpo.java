@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,9 @@ public class HistoryJpo {
 
     @Id
     private String id; // 히스토리ID (memberId_startDate)
-    private Long startDate;
-    private Long endDate;
-    private Long bookDate; // 예약날짜
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime bookDate; // 예약날짜
     private int totalPrice;
 
     private boolean debtYn;

@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +30,9 @@ public class HistoryService {
     private final PaymentService paymentService;
 
     public String registerHistory(HistoryCdo historyCdo) {
-        long now = System.currentTimeMillis();
+        LocalDateTime nowTime = LocalDateTime.now();
+        String historyId = historyCdo.genId(nowTime);
         long memberId = historyCdo.getMemberId();
-        String historyId = historyCdo.genId(now);
         int prepaidPrice = 0;
 
         // productList 로 totalPrice 계산
@@ -40,7 +42,7 @@ public class HistoryService {
 
         History history = new History(historyCdo);
         history.setId(historyId);
-        history.setStartDate(now);
+        history.setStartDate(nowTime);
         history.setTotalPrice(totalPrice);
 
         // product 등록

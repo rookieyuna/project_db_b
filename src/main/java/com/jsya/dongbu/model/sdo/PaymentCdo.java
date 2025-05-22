@@ -7,13 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentCdo {
 
-    private long paymentDate; // 갚은 날짜
+    private LocalDateTime paymentDate; // 갚은 날짜
     private int paymentPrice; // 지불액
 
     private long memberId; // 회원ID

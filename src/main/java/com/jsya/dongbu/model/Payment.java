@@ -2,7 +2,7 @@ package com.jsya.dongbu.model;
 
 import com.jsya.dongbu.model.sdo.PaymentCdo;
 import com.jsya.dongbu.model.sdo.PaymentUdo;
-import com.jsya.dongbu.model.sdo.ProductUdo;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class Payment {
 
     @Id

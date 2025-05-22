@@ -38,7 +38,7 @@ public class MemberController {
         return ApiResponse.ok(memberId);
     }
 
-    @PostMapping("/find")
+    @PostMapping("/find-by-id")
     public ApiResponse<Member>  findMemberById(@RequestBody long memberId) {
         Member member = memberService.findMemberById(memberId);
         return ApiResponse.ok(member);

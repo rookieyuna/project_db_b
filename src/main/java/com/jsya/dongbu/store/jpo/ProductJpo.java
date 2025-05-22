@@ -3,10 +3,7 @@ package com.jsya.dongbu.store.jpo;
 import com.jsya.dongbu.model.History;
 import com.jsya.dongbu.model.Product;
 import com.jsya.dongbu.model.vo.*;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,21 +23,28 @@ public class ProductJpo {
 
     @Id
     private String id; // 제품ID (memberId_startDate_label)
+    @Column(nullable = false)
     private int label;
+    @Enumerated(EnumType.STRING)
     private OrderType orderType;
+    @Enumerated(EnumType.STRING)
     private ProductType productType;
-    @Column(length = 200, nullable = false)
+    @Column(length = 200, nullable = true)
     private String productEtc;
+    @Enumerated(EnumType.STRING)
     private RepairType repairType;
+    @Enumerated(EnumType.STRING)
     private TextureType textureType;
+    @Enumerated(EnumType.STRING)
     private SizeType sizeType;
     private String color;
     private boolean premiumYn;
+    @Column(nullable = false)
     private int price;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private long memberId; // 회원ID
-    @Column(length = 100, nullable = true)
+    @Column(length = 100, nullable = false)
     private String historyId; // 히스토리ID (memberId_startDate)
 
     public ProductJpo(Product product) {

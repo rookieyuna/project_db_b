@@ -21,7 +21,6 @@ public class HistoryJpo {
     private Long startDate;
     private Long endDate;
     private Long bookDate; // 예약날짜
-    private int prepaidPrice;
     private int totalPrice;
 
     private boolean debtYn;
@@ -46,6 +45,6 @@ public class HistoryJpo {
     }
 
     public static HistoryJpo Sample() {
-        return new HistoryJpo("99_17171717", System.currentTimeMillis(), System.currentTimeMillis(), null, 0, 10000, true, true, 99L);
+        return new HistoryJpo("99_17171717", System.currentTimeMillis(), System.currentTimeMillis(), null, 0, true, true, 99L);
     }
 }

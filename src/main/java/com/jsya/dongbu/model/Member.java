@@ -2,6 +2,7 @@ package com.jsya.dongbu.model;
 
 import com.jsya.dongbu.model.sdo.MemberCdo;
 import com.jsya.dongbu.model.sdo.MemberUdo;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class Member {
 
     @Id

@@ -27,9 +27,9 @@ public class PaymentJpo {
     private long paymentDate; // 결제 날짜
     private int paymentPrice; // 지불액
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private long memberId; // 회원ID
-    @Column(length = 100, nullable = true)
+    @Column(length = 100, nullable = false)
     private String historyId; // 히스토리ID
 
     public PaymentJpo(Payment payment) {

@@ -39,7 +39,7 @@ public class HistoryController {
         return ApiResponse.ok(historyId);
     }
 
-    @PostMapping("/find")
+    @PostMapping("/find-by-id")
     public ApiResponse<History>  findHistoryById(@RequestBody String historyId) {
         History history = historyService.findHistoryById(historyId);
         return ApiResponse.ok(history);
@@ -59,7 +59,7 @@ public class HistoryController {
     @GetMapping("/find-by-member-by-page")
     public ApiResponse<PageResponse<History>> findHistorysByMemberByPage(
             @RequestParam long memberId,
-            @PageableDefault(size = 20, sort = "name") Pageable pageable) {
+            @PageableDefault(size = 20, sort = "registeredOn") Pageable pageable) {
         return ApiResponse.ok(historyService.findHistorysByMember(memberId, pageable));
     }
 }

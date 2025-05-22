@@ -16,7 +16,6 @@ public class HistoryUdo {
     private Long startDate; // 맡긴날짜
     private Long endDate; // 찾은날짜
     private Long bookDate; // 예약날짜
-    private int prepaidPrice; // 선납금액
 
     private boolean cardYn; // 카드여부
 }

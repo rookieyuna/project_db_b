@@ -13,12 +13,13 @@ import lombok.Setter;
 public class HistoryCdo {
 
     private Long bookDate; // 예약날짜
-    private int prepaidPrice; // 선납금액
     private boolean cardYn; // 카드여부
 
     private long memberId;
 
     private ProductCdo[] productCdos;
+
+    private PaymentCdo paymentCdo;
 
     public String genId(long startDate) {
         return History.genId(memberId, startDate);

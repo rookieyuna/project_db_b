@@ -2,6 +2,7 @@ package com.jsya.dongbu.model;
 
 import com.jsya.dongbu.model.sdo.HistoryCdo;
 import com.jsya.dongbu.model.sdo.HistoryUdo;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class History {
 
     @Id
@@ -18,7 +20,6 @@ public class History {
     private Long startDate; // 맡긴날짜
     private Long endDate; // 찾은날짜
     private Long bookDate; // 예약날짜
-    private int prepaidPrice;
     private int totalPrice;
 
     private boolean debtYn;

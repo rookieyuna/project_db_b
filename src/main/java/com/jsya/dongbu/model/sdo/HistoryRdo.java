@@ -2,6 +2,7 @@ package com.jsya.dongbu.model.sdo;
 
 import com.jsya.dongbu.model.History;
 import com.jsya.dongbu.model.Member;
+import com.jsya.dongbu.model.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,6 @@ public class HistoryRdo {
     private Long startDate;// 맡긴날짜
     private Long endDate; // 찾은날짜
     private Long bookDate; // 예약날짜
-    private int prepaidPrice;
     private int totalPrice;
 
     private boolean debtYn;
@@ -27,6 +27,9 @@ public class HistoryRdo {
     private long memberId;
     private String memberAddress;
     private String memberName;
+
+    private ProductRdo[] products;
+    private Payment[] payments;
 
     public HistoryRdo(History history, Member member) {
         //

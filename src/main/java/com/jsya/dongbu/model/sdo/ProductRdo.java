@@ -1,11 +1,10 @@
-package com.jsya.dongbu.model;
+package com.jsya.dongbu.model.sdo;
 
-import com.jsya.dongbu.model.sdo.HistoryUdo;
-import com.jsya.dongbu.model.sdo.ProductCdo;
-import com.jsya.dongbu.model.sdo.ProductUdo;
+import com.jsya.dongbu.model.History;
+import com.jsya.dongbu.model.Member;
+import com.jsya.dongbu.model.Product;
 import com.jsya.dongbu.model.vo.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,10 +13,9 @@ import org.springframework.beans.BeanUtils;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-public class Product {
+@AllArgsConstructor
+public class ProductRdo {
 
-    @Id
     private String id; // 제품ID (memberId_startDate_label)
     private int label;
     private OrderType orderType;
@@ -33,15 +31,8 @@ public class Product {
     private long memberId;
     private String historyId;
 
-    public Product(ProductCdo productCdo){
-        BeanUtils.copyProperties(productCdo, this);
-    }
-
-    public static String genId(String historyId, int label) {
-        return historyId + '_' + label;
-    }
-
-    public void modifyAttributes(ProductUdo productUdo) {
-        BeanUtils.copyProperties(productUdo, this);
+    public ProductRdo(Product product) {
+        //
+        BeanUtils.copyProperties(product, this);
     }
 }

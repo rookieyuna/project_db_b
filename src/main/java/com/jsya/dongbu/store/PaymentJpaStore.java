@@ -53,7 +53,19 @@ public class PaymentJpaStore implements PaymentStore {
     }
 
     @Override
-    public Page<Payment> retrieveListByHistory(String historyId, Pageable pageable) {
+    public Page<Payment> retrieveListByMemberByPage(long memberId, Pageable pageable) {
+        Page<PaymentJpo> page = paymentRepository.findByMemberId(memberId, pageable);
+        return page.map(PaymentJpo::toDomain);
+    }
+
+    @Override
+    public List<Payment> retrieveListByHistory(String historyId) {
+        List<PaymentJpo> paymentJpos = paymentRepository.findByHistoryId(historyId);
+        return paymentJpos.stream().map(PaymentJpo::toDomain).toList();
+    }
+
+    @Override
+    public Page<Payment> retrieveListByHistoryByPage(String historyId, Pageable pageable) {
         Page<PaymentJpo> page = paymentRepository.findByHistoryId(historyId, pageable);
         return page.map(PaymentJpo::toDomain);
     }

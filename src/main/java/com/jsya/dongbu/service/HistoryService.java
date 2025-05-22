@@ -5,10 +5,7 @@ import com.jsya.dongbu.common.response.PageResponse;
 import com.jsya.dongbu.model.History;
 
 import com.jsya.dongbu.model.Member;
-import com.jsya.dongbu.model.sdo.HistoryCdo;
-import com.jsya.dongbu.model.sdo.HistoryRdo;
-import com.jsya.dongbu.model.sdo.HistoryUdo;
-import com.jsya.dongbu.model.sdo.ProductCdo;
+import com.jsya.dongbu.model.sdo.*;
 import com.jsya.dongbu.store.HistoryJpaStore;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,26 +22,49 @@ import java.util.Optional;
 @AllArgsConstructor
 public class HistoryService {
 
-    private final MemberService memberService;
     private final HistoryJpaStore historyJpaStore;
+    private final MemberService memberService;
+    private final ProductService productService;
+    private final PaymentService paymentService;
 
     public String registerHistory(HistoryCdo historyCdo) {
         long now = System.currentTimeMillis();
+        long memberId = historyCdo.getMemberId();
         String historyId = historyCdo.genId(now);
-        int price = Arrays.stream(historyCdo.getProductCdos())
+        int prepaidPrice = 0;
+
+        // productList 로 totalPrice 계산
+        int totalPrice = Arrays.stream(historyCdo.getProductCdos())
                 .mapToInt(ProductCdo::getPrice)
                 .sum();
 
         History history = new History(historyCdo);
         history.setId(historyId);
         history.setStartDate(now);
-        history.setTotalPrice(price);
+        history.setTotalPrice(totalPrice);
 
-        if(history.getTotalPrice() - history.getPrepaidPrice() > 0) {
-            history.setDebtYn(true);
+        // product 등록
+        List<String> productIds = Arrays.stream(historyCdo.getProductCdos())
+                .map(productCdo -> {
+                    productCdo.setHistoryId(historyId);
+                    productCdo.setMemberId(memberId);
+                    return productService.registerProduct(productCdo);
+                })
+                .toList();
+
+        // payment 등록
+        PaymentCdo paymentCdo = historyCdo.getPaymentCdo();
+        if (paymentCdo != null) {
+            paymentCdo.setHistoryId(historyId);
+            paymentCdo.setMemberId(memberId);
+            prepaidPrice = paymentCdo.getPaymentPrice();
+            paymentService.registerPayment(paymentCdo);
         }
 
-        //TODO: productCdos 등록
+        // 미수여부 설정
+        if(totalPrice - prepaidPrice > 0) {
+            history.setDebtYn(true);
+        }
 
         return historyJpaStore.create(history);
     }

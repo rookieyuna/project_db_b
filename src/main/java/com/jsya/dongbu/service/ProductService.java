@@ -4,6 +4,7 @@ import com.jsya.dongbu.common.exception.NotFoundException;
 import com.jsya.dongbu.common.response.PageResponse;
 import com.jsya.dongbu.model.Product;
 import com.jsya.dongbu.model.sdo.ProductCdo;
+import com.jsya.dongbu.model.sdo.ProductRdo;
 import com.jsya.dongbu.model.sdo.ProductUdo;
 import com.jsya.dongbu.store.ProductJpaStore;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,6 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductJpaStore productJpaStore;
-    private final HistoryService historyService;
 
     public String registerProduct(ProductCdo productCdo) {
         String productId = productCdo.genId();
@@ -37,8 +37,9 @@ public class ProductService {
         return productJpaStore.update(product);
     }
 
-    public List<Product> findProducts() {
-        return productJpaStore.retrieveAll();
+    public List<ProductRdo> findProducts() {
+        List<Product> products = productJpaStore.retrieveAll();
+        return products.stream().map(ProductRdo::new).toList();
     }
 
     public Product findProductById(String  productId) {

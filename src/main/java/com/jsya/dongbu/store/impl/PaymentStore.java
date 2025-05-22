@@ -15,7 +15,9 @@ public interface PaymentStore {
     Optional<Payment> retrieve(String id);
     List<Payment> retrieveAll();
     Page<Payment> retrieveList(Pageable pageable);
-    Page<Payment> retrieveListByHistory(String historyId, Pageable pageable);
+    Page<Payment> retrieveListByMemberByPage(long memberId, Pageable pageable);
+    List<Payment> retrieveListByHistory(String historyId);
+    Page<Payment> retrieveListByHistoryByPage(String historyId, Pageable pageable);
     void delete(String id);
     boolean exists(String id);
 }

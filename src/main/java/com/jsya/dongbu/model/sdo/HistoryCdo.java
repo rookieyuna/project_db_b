@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class HistoryCdo {
 
     private LocalDateTime bookDate; // 예약날짜
-    private boolean cardYn; // 카드여부
 
     private long memberId;
 

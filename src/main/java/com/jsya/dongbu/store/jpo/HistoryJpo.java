@@ -25,7 +25,6 @@ public class HistoryJpo {
     private int totalPrice;
 
     private boolean debtYn;
-    private boolean cardYn;
 
     @Column (nullable = false)
     private long memberId;
@@ -46,6 +45,6 @@ public class HistoryJpo {
     }
 
     public static HistoryJpo Sample() {
-        return new HistoryJpo("99_17171717", System.currentTimeMillis(), System.currentTimeMillis(), null, 0, true, true, 99L);
+        return new HistoryJpo("99_17171717", LocalDateTime.now(), LocalDateTime.now(), null, 0, true, 99L);
     }
 }

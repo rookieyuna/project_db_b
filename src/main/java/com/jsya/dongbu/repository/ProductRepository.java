@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface ProductRepository extends JpaRepository<ProductJpo, String> {
-    Page<ProductJpo> findByHistoryId(String historyId, Pageable pageable);
+    List<ProductJpo> findByHistoryId(String historyId);
+    Page<ProductJpo> findByMemberId(long memberId, Pageable pageable);
 }

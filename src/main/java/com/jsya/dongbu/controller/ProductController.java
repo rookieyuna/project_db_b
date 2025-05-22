@@ -51,15 +51,13 @@ public class ProductController {
         return ApiResponse.ok(products);
     }
 
-    @GetMapping("/find-by-page")
-    public ApiResponse<PageResponse<Product>> findProductsByPage(Pageable pageable) {
+    @GetMapping("/find-all-by-page")
+    public ApiResponse<PageResponse<ProductRdo>> findProductsByPage(Pageable pageable) {
         return ApiResponse.ok(productService.findProductsByPage(pageable));
     }
 
-    @GetMapping("/find-by-history-by-page")
-    public ApiResponse<PageResponse<Product>> findProductsByHistoryByPage(
-            @RequestParam String historyId,
-            @PageableDefault(size = 20, sort = "name") Pageable pageable) {
-        return ApiResponse.ok(productService.findProductsByHistory(historyId, pageable));
+    @GetMapping("/find-by-history")
+    public ApiResponse<List<ProductRdo>> findProductsByHistory(@RequestParam String historyId) {
+        return ApiResponse.ok(productService.findProductsByHistoryId(historyId));
     }
 }

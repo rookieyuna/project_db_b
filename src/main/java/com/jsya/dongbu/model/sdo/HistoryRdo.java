@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -24,19 +25,20 @@ public class HistoryRdo {
     private int totalPrice;
 
     private boolean debtYn;
-    private boolean cardYn;
 
     private long memberId;
     private String memberAddress;
     private String memberName;
 
-    private ProductRdo[] products;
-    private Payment[] payments;
+    private List<ProductRdo> products;
+    private List<Payment> payments;
 
-    public HistoryRdo(History history, Member member) {
+    public HistoryRdo(History history, Member member, List<ProductRdo> products, List<Payment> payments) {
         //
         BeanUtils.copyProperties(history, this);
         this.memberAddress = member.getAddress();
         this.memberName = member.getName();
+        this.products = products;
+        this.payments = payments;
     }
 }

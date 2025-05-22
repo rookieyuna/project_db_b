@@ -18,6 +18,4 @@ public class HistoryUdo {
     private LocalDateTime startDate; // 맡긴날짜
     private LocalDateTime endDate; // 찾은날짜
     private LocalDateTime bookDate; // 예약날짜
-
-    private boolean cardYn; // 카드여부
 }

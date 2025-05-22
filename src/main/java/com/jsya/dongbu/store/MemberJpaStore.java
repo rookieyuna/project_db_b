@@ -24,7 +24,6 @@ public class MemberJpaStore implements MemberStore {
         return memberJpo.getId();
     }
 
-    @Override
     public List<Long> createAll(List<Member> members) {
         List<MemberJpo> jpos = members.stream()
                 .map(MemberJpo::new)
@@ -53,12 +52,12 @@ public class MemberJpaStore implements MemberStore {
     }
 
     @Override
-    public Page<Member> retrieveList(Pageable pageable) {
+    public Page<Member> retrieveAllByPage(Pageable pageable) {
         return memberRepository.findAll(pageable).map(MemberJpo::toDomain);
     }
 
     @Override
-    public Page<Member> retrieveListByAddress(String addressKeyword, Pageable pageable) {
+    public Page<Member> retrieveListByAddressByPage(String addressKeyword, Pageable pageable) {
         Page<MemberJpo> page = memberRepository.findByAddressContains(addressKeyword, pageable);
         return page.map(MemberJpo::toDomain);
     }

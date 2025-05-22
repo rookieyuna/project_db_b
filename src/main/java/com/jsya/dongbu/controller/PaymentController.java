@@ -50,22 +50,23 @@ public class PaymentController {
         return ApiResponse.ok(payments);
     }
 
-    @GetMapping("/find-by-page")
+    @GetMapping("/find-all-by-page")
     public ApiResponse<PageResponse<Payment>> findPaymentsByPage(Pageable pageable) {
         return ApiResponse.ok(paymentService.findPaymentsByPage(pageable));
+    }
+
+    @GetMapping("/find-by-history")
+    public ApiResponse<List<Payment>> findPaymentsByHistory(
+            @RequestParam String historyId) {
+        return ApiResponse.ok(paymentService.findPaymentsByHistory(historyId));
     }
 
     @GetMapping("/find-by-member-by-page")
     public ApiResponse<PageResponse<Payment>> findPaymentsByMemberByPage(
             @RequestParam long memberId,
             @PageableDefault(size = 20, sort = "paymentDate") Pageable pageable) {
-        return ApiResponse.ok(paymentService.findPaymentsByMember(memberId, pageable));
+        return ApiResponse.ok(paymentService.findPaymentsByMemberByPage(memberId, pageable));
     }
 
-    @GetMapping("/find-by-history-by-page")
-    public ApiResponse<PageResponse<Payment>> findPaymentsByHistoryByPage(
-            @RequestParam String historyId,
-            @PageableDefault(size = 20, sort = "paymentDate") Pageable pageable) {
-        return ApiResponse.ok(paymentService.findPaymentsByHistory(historyId, pageable));
-    }
+
 }

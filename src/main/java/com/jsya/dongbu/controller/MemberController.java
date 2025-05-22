@@ -50,7 +50,7 @@ public class MemberController {
         return ApiResponse.ok(members);
     }
 
-    @GetMapping("/find-by-page")
+    @GetMapping("/find-all-by-page")
     public ApiResponse<PageResponse<Member>> findMembersByPage(Pageable pageable) {
         return ApiResponse.ok(memberService.findMembersByPage(pageable));
     }
@@ -59,6 +59,6 @@ public class MemberController {
     public ApiResponse<PageResponse<Member>> findMembersByAddressByPage(
             @RequestParam String address,
             @PageableDefault(size = 20, sort = "name") Pageable pageable) {
-        return ApiResponse.ok(memberService.findMembersByAddress(address, pageable));
+        return ApiResponse.ok(memberService.findMembersByAddressByPage(address, pageable));
     }
 }

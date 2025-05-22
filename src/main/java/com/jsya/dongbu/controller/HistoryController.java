@@ -51,7 +51,7 @@ public class HistoryController {
         return ApiResponse.ok(historys);
     }
 
-    @GetMapping("/find-by-page")
+    @GetMapping("/find-all-by-page")
     public ApiResponse<PageResponse<History>> findHistorysByPage(Pageable pageable) {
         return ApiResponse.ok(historyService.findHistorysByPage(pageable));
     }

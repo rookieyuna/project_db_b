@@ -6,7 +6,6 @@ import com.jsya.dongbu.model.History;
 import com.jsya.dongbu.model.Payment;
 import com.jsya.dongbu.model.sdo.PaymentCdo;
 import com.jsya.dongbu.model.sdo.PaymentUdo;
-import com.jsya.dongbu.model.sdo.ProductCdo;
 import com.jsya.dongbu.store.PaymentJpaStore;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,12 +21,13 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentJpaStore paymentJpaStore;
-    private final HistoryService historyService;
+//    private final HistoryService historyService;
 
     public String registerPayment(PaymentCdo paymentCdo) {
-        String paymentId = paymentCdo.genId();
         Payment payment = new Payment(paymentCdo);
-        payment.setId(paymentId);
+        payment.setId(paymentCdo.genId());
+
+        checkHistoryFullPaid(payment.getHistoryId());
 
         return paymentJpaStore.create(payment);
     }
@@ -36,22 +36,23 @@ public class PaymentService {
         Payment payment = findPaymentById(paymentUdo.getId());
         payment.modifyAttributes(paymentUdo);
 
+        checkHistoryFullPaid(payment.getHistoryId());
+
         return paymentJpaStore.update(payment);
     }
 
     private void checkHistoryFullPaid(String historyId) {
-        History history = historyService.findHistoryById(historyId);
-        if(history == null) return;
-        int totalPrice = history.getTotalPrice();
-
-        List<Payment> payments = paymentJpaStore.retrieveListByHistory(historyId);
-        int totalPaymentPrice = payments.stream()
-                .mapToInt(Payment::getPaymentPrice)
-                .sum();
-
-        boolean isFullPaid = totalPrice - totalPaymentPrice > 0;
-
-        history.setDebtYn(false);
+//        History history = historyService.findHistoryById(historyId);
+//        if(history == null) return;
+//        int totalPrice = history.getTotalPrice();
+//
+//        List<Payment> payments = paymentJpaStore.retrieveListByHistory(historyId);
+//        int totalPaymentPrice = payments.stream()
+//                .mapToInt(Payment::getPaymentPrice)
+//                .sum();
+//
+//        history.setDebtYn(totalPrice - totalPaymentPrice > 0);
+//        historyService.modifyHistory(history);
     }
 
     public List<Payment> findPayments() {
@@ -60,11 +61,11 @@ public class PaymentService {
 
     public Payment findPaymentById(String  paymentId) {
         Optional<Payment> paymentOpt = paymentJpaStore.retrieve(paymentId);
-        return paymentOpt.orElseThrow(() -> new NotFoundException("결제내역이 존재하지 않습니다."));
+        return paymentOpt.orElseThrow(() -> new NotFoundException("ID [%s]에 해당하는 결제내역이 없습니다."));
     }
 
     public PageResponse<Payment> findPaymentsByPage(Pageable pageable) {
-        Page<Payment> page = paymentJpaStore.retrieveList(pageable);
+        Page<Payment> page = paymentJpaStore.retrieveAllByPage(pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -74,18 +75,11 @@ public class PaymentService {
         );
     }
 
-    public PageResponse<Payment> findPaymentsByHistory(String historyId, Pageable pageable) {
-        Page<Payment> page = paymentJpaStore.retrieveListByHistoryByPage(historyId, pageable);
-        return new PageResponse<>(
-                page.getContent(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages()
-        );
+    public List<Payment> findPaymentsByHistory(String historyId) {
+        return paymentJpaStore.retrieveListByHistory(historyId);
     }
 
-    public PageResponse<Payment> findPaymentsByMember(long memberId, Pageable pageable) {
+    public PageResponse<Payment> findPaymentsByMemberByPage(long memberId, Pageable pageable) {
         Page<Payment> page = paymentJpaStore.retrieveListByMemberByPage(memberId, pageable);
         return new PageResponse<>(
                 page.getContent(),

@@ -3,6 +3,7 @@ package com.jsya.dongbu.store;
 import com.jsya.dongbu.model.Product;
 import com.jsya.dongbu.repository.ProductRepository;
 import com.jsya.dongbu.store.impl.ProductStore;
+import com.jsya.dongbu.store.jpo.PaymentJpo;
 import com.jsya.dongbu.store.jpo.ProductJpo;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,11 +26,6 @@ public class ProductJpaStore implements ProductStore {
     }
 
     @Override
-    public List<String> createAll(List<Product> products) {
-        return List.of();
-    }
-
-    @Override
     public String update(Product product) {
         ProductJpo productJpo = productRepository.save(new ProductJpo(product));
         return productJpo.getId();
@@ -48,14 +44,21 @@ public class ProductJpaStore implements ProductStore {
     }
 
     @Override
-    public Page<Product> retrieveList(Pageable pageable) {
+    public Page<Product> retrieveAllByPage(Pageable pageable) {
         return productRepository.findAll(pageable).map(ProductJpo::toDomain);
     }
 
     @Override
-    public Page<Product> retrieveListByHistory(String historyId, Pageable pageable) {
-        Page<ProductJpo> page = productRepository.findByHistoryId(historyId, pageable);
+    public List<Product> retrieveListByHistory(String historyId) {
+        List<ProductJpo> productJpos = productRepository.findByHistoryId(historyId);
+        return productJpos.stream().map(ProductJpo::toDomain).toList();
+    }
+
+    @Override
+    public Page<Product> retrieveListByMemberByPage(long memberId, Pageable pageable) {
+        Page<ProductJpo> page = productRepository.findByMemberId(memberId, pageable);
         return page.map(ProductJpo::toDomain);
+
     }
 
     @Override

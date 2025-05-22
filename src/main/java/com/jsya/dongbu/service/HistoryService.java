@@ -5,6 +5,7 @@ import com.jsya.dongbu.common.response.PageResponse;
 import com.jsya.dongbu.model.History;
 
 import com.jsya.dongbu.model.Member;
+import com.jsya.dongbu.model.Payment;
 import com.jsya.dongbu.model.sdo.*;
 import com.jsya.dongbu.store.HistoryJpaStore;
 import lombok.AllArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +71,10 @@ public class HistoryService {
         return historyJpaStore.create(history);
     }
 
+    public String modifyHistory(History history) {
+        return historyJpaStore.update(history);
+    }
+
     public String modifyHistory(HistoryUdo historyUdo) {
         History history = findHistoryById(historyUdo.getId());
 
@@ -83,7 +87,10 @@ public class HistoryService {
 
         return historys.stream().map(history -> {
             Member member = memberService.findMemberById(history.getMemberId());
-            return new HistoryRdo(history, member);
+            List<ProductRdo> productRdos = productService.findProductsByHistoryId(history.getId());
+            List<Payment> payments = paymentService.findPaymentsByHistory(history.getId());
+
+            return new HistoryRdo(history, member, productRdos, payments);
         }).toList();
     }
 
@@ -93,7 +100,7 @@ public class HistoryService {
     }
 
     public PageResponse<History> findHistorysByPage(Pageable pageable) {
-        Page<History> page = historyJpaStore.retrieveList(pageable);
+        Page<History> page = historyJpaStore.retrieveAllByPage(pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -104,7 +111,7 @@ public class HistoryService {
     }
 
     public PageResponse<History> findHistorysByMember(long memberId, Pageable pageable) {
-        Page<History> page = historyJpaStore.retrieveListByMember(memberId, pageable);
+        Page<History> page = historyJpaStore.retrieveListByMemberByPage(memberId, pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),

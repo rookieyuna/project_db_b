@@ -25,11 +25,6 @@ public class PaymentJpaStore implements PaymentStore {
     }
 
     @Override
-    public List<String> createAll(List<Payment> payments) {
-        return List.of();
-    }
-
-    @Override
     public String update(Payment payment) {
         PaymentJpo paymentJpo = paymentRepository.save(new PaymentJpo(payment));
         return paymentJpo.getId();
@@ -48,7 +43,7 @@ public class PaymentJpaStore implements PaymentStore {
     }
 
     @Override
-    public Page<Payment> retrieveList(Pageable pageable) {
+    public Page<Payment> retrieveAllByPage(Pageable pageable) {
         return paymentRepository.findAll(pageable).map(PaymentJpo::toDomain);
     }
 
@@ -62,12 +57,6 @@ public class PaymentJpaStore implements PaymentStore {
     public List<Payment> retrieveListByHistory(String historyId) {
         List<PaymentJpo> paymentJpos = paymentRepository.findByHistoryId(historyId);
         return paymentJpos.stream().map(PaymentJpo::toDomain).toList();
-    }
-
-    @Override
-    public Page<Payment> retrieveListByHistoryByPage(String historyId, Pageable pageable) {
-        Page<PaymentJpo> page = paymentRepository.findByHistoryId(historyId, pageable);
-        return page.map(PaymentJpo::toDomain);
     }
 
     @Override

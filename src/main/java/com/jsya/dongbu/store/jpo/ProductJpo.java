@@ -24,6 +24,7 @@ public class ProductJpo {
     @Id
     private String id; // 제품ID (memberId_startDate_label)
     @Column(nullable = false)
+
     private int label;
     @Enumerated(EnumType.STRING)
     private OrderType orderType;

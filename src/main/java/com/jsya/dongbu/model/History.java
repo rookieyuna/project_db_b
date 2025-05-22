@@ -23,9 +23,7 @@ public class History {
     private LocalDateTime endDate; // 찾은날짜
     private LocalDateTime bookDate; // 예약날짜
     private int totalPrice;
-
-    private boolean debtYn;
-    private boolean cardYn;
+    private boolean debtYn; // 미납여부
 
     private long memberId;
 

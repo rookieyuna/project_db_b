@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +24,7 @@ public class MemberService {
     public long registerMember(MemberCdo memberCdo) {
         Member member = new Member(memberCdo);
 
-        member.setRegisteredDate(System.currentTimeMillis());
+        member.setRegisteredDate(LocalDateTime.now());
         member.setStatus(true);
 
         return memberJpaStore.create(member);
@@ -46,7 +47,7 @@ public class MemberService {
     }
 
     public PageResponse<Member> findMembersByPage(Pageable pageable) {
-        Page<Member> page = memberJpaStore.retrieveList(pageable);
+        Page<Member> page = memberJpaStore.retrieveAllByPage(pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -56,8 +57,8 @@ public class MemberService {
         );
     }
 
-    public PageResponse<Member> findMembersByAddress(String address, Pageable pageable) {
-        Page<Member> page = memberJpaStore.retrieveListByAddress(address, pageable);
+    public PageResponse<Member> findMembersByAddressByPage(String address, Pageable pageable) {
+        Page<Member> page = memberJpaStore.retrieveListByAddressByPage(address, pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),

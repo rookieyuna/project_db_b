@@ -44,6 +44,6 @@ public class MemberJpo {
     }
 
     public static MemberJpo Sample() {
-        return new MemberJpo(99,"가산동 112", "홍길동","010-1234-5678", true, System.currentTimeMillis());
+        return new MemberJpo(99,"가산동 112", "홍길동","010-1234-5678", true, LocalDateTime.now());
     }
 }

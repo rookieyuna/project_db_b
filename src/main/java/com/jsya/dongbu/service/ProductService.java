@@ -2,6 +2,7 @@ package com.jsya.dongbu.service;
 
 import com.jsya.dongbu.common.exception.NotFoundException;
 import com.jsya.dongbu.common.response.PageResponse;
+import com.jsya.dongbu.model.History;
 import com.jsya.dongbu.model.Product;
 import com.jsya.dongbu.model.sdo.ProductCdo;
 import com.jsya.dongbu.model.sdo.ProductRdo;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductJpaStore productJpaStore;
+//    private final HistoryService historyService;
+
 
     public String registerProduct(ProductCdo productCdo) {
         String productId = productCdo.genId();
@@ -32,8 +35,16 @@ public class ProductService {
     public String modifyProduct(ProductUdo productUdo) {
         Product product = findProductById(productUdo.getId());
         product.modifyAttributes(productUdo);
-        //TODO: price 변경됐을경우 해당하는 History totalPrice도 변경 로직 추가
 
+        // price 변경됐을경우 해당하는 History의 totalPrice도 변경
+        if (product.getPrice() != productUdo.getPrice()) {
+            List<Product> products = productJpaStore.retrieveListByHistory(product.getHistoryId());
+            int newTotalPrice = products.stream().mapToInt(Product::getPrice).sum();
+
+//            History history =  historyService.findHistoryById(product.getHistoryId());
+//            history.setTotalPrice(newTotalPrice);
+//            historyService.modifyHistory(history); // ✅ History update 반영
+        }
         return productJpaStore.update(product);
     }
 
@@ -47,8 +58,10 @@ public class ProductService {
         return productOpt.orElseThrow(() -> new NotFoundException("제품이 존재하지 않습니다."));
     }
 
-    public PageResponse<Product> findProductsByPage(Pageable pageable) {
-        Page<Product> page = productJpaStore.retrieveList(pageable);
+    public PageResponse<ProductRdo> findProductsByPage(Pageable pageable) {
+        Page<ProductRdo> page = productJpaStore.retrieveAllByPage(pageable)
+                .map(ProductRdo::new);  // ✅ 올바른 방식으로 Page 내부 변환
+
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),
@@ -57,9 +70,13 @@ public class ProductService {
                 page.getTotalPages()
         );
     }
+    public List<ProductRdo> findProductsByHistoryId(String historyId) {
+        List<Product> products = productJpaStore.retrieveListByHistory(historyId);
+        return products.stream().map(ProductRdo::new).toList();
+    }
 
-    public PageResponse<Product> findProductsByHistory(String historyId, Pageable pageable) {
-        Page<Product> page = productJpaStore.retrieveListByHistory(historyId, pageable);
+    public PageResponse<Product> findProductsByMemberByPage(long memberId, Pageable pageable) {
+        Page<Product> page = productJpaStore.retrieveListByMemberByPage(memberId, pageable);
         return new PageResponse<>(
                 page.getContent(),
                 page.getNumber(),

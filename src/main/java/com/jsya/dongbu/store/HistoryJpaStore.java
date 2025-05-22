@@ -25,16 +25,6 @@ public class HistoryJpaStore implements HistoryStore {
     }
 
     @Override
-    public List<String> createAll(List<History> historys) {
-        List<HistoryJpo> jpos = historys.stream()
-                .map(HistoryJpo::new)
-                .toList();
-        return historyRepository.saveAll(jpos).stream()
-                .map(HistoryJpo::getId)
-                .toList();
-    }
-
-    @Override
     public String update(History history) {
         HistoryJpo historyJpo = historyRepository.save(new HistoryJpo(history));
         return historyJpo.getId();
@@ -53,12 +43,12 @@ public class HistoryJpaStore implements HistoryStore {
     }
 
     @Override
-    public Page<History> retrieveList(Pageable pageable) {
+    public Page<History> retrieveAllByPage(Pageable pageable) {
         return historyRepository.findAll(pageable).map(HistoryJpo::toDomain);
     }
 
     @Override
-    public Page<History> retrieveListByMember(long memberId, Pageable pageable) {
+    public Page<History> retrieveListByMemberByPage(long memberId, Pageable pageable) {
         Page<HistoryJpo> page = historyRepository.findByMemberId(memberId, pageable);
         return page.map(HistoryJpo::toDomain);
     }

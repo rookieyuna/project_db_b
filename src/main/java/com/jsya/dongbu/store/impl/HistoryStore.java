@@ -10,12 +10,11 @@ import java.util.Optional;
 public interface HistoryStore {
 
     String create(History history);
-    List<String> createAll(List<History> historys);
     String update(History history);
     Optional<History> retrieve(String id);
     List<History> retrieveAll();
-    Page<History> retrieveList(Pageable pageable);
-    Page<History> retrieveListByMember(long memberId, Pageable pageable);
+    Page<History> retrieveAllByPage(Pageable pageable);
+    Page<History> retrieveListByMemberByPage(long memberId, Pageable pageable);
     void delete(String id);
     boolean exists(String id);
 }

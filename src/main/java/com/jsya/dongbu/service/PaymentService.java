@@ -32,8 +32,8 @@ public class PaymentService {
         Payment payment = new Payment(paymentCdo);
         payment.setId(paymentCdo.genId());
 
-        // 외상 완납 여부 체크 및 등록
-        checkHistoryFullPaid(payment.getHistoryId());
+        // 외상 완납 여부 체크 및 등록 - 250525 debt 로직 history로 이관하며 주석처리
+//        checkHistoryFullPaid(payment.getHistoryId());
 
         return paymentJpaStore.create(payment);
     }
@@ -42,8 +42,8 @@ public class PaymentService {
         Payment payment = findPaymentById(paymentUdo.getId());
         payment.modifyAttributes(paymentUdo);
 
-        // 외상 완납 여부 체크 및 등록
-        checkHistoryFullPaid(payment.getHistoryId());
+        // 외상 완납 여부 체크 및 등록 - 250525 debt 로직 history로 이관하며 주석처리
+//        checkHistoryFullPaid(payment.getHistoryId());
 
         return paymentJpaStore.update(payment);
     }

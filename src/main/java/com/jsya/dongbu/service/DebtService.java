@@ -34,6 +34,7 @@ public class DebtService {
 
     public long modifyDebt(DebtUdo debtUdo) {
         Debt debt = findDebtById(debtUdo.getId());
+        debt.setPaidDate(LocalDateTime.now());
 
         debt.modifyAttributes(debtUdo);
         return debtJpaStore.update(debt);

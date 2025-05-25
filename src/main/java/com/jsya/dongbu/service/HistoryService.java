@@ -2,6 +2,7 @@ package com.jsya.dongbu.service;
 
 import com.jsya.dongbu.common.exception.NotFoundException;
 import com.jsya.dongbu.common.response.PageResponse;
+import com.jsya.dongbu.model.Debt;
 import com.jsya.dongbu.model.History;
 
 import com.jsya.dongbu.model.Member;
@@ -28,6 +29,7 @@ public class HistoryService {
     private final MemberService memberService;
     private final ProductService productService;
     private final PaymentService paymentService;
+    private final DebtService debtService;
 
     public String registerHistory(HistoryCdo historyCdo) {
         LocalDateTime nowTime = LocalDateTime.now();
@@ -54,7 +56,7 @@ public class HistoryService {
                 })
                 .toList();
 
-        // payment 등록 및 미수여부 설정
+        // payment 등록
         PaymentCdo paymentCdo = historyCdo.getPaymentCdo();
         if (paymentCdo != null) {
             paymentCdo.setHistoryId(historyId);
@@ -63,12 +65,43 @@ public class HistoryService {
             paymentService.registerPayment(paymentCdo);
         }
 
-        // 미수여부 설정
-//        if(totalPrice - prepaidPrice > 0) {
-//            history.setDebtYn(true);
+        // 미수 금액 = 총 결제 해야 할 금액 - 현재 지불 금액
+        int debtPrice = totalPrice - prepaidPrice;
+
+        // 미수 여부 설정
+//        if(debtPrice > 0) {
+//            // 미수 금액 완납 여부 체크 및 등록
+//            history.setDebtYn(checkHistoryFullPaid(historyId, memberId, debtPrice));
 //        }
+        // 미수 금액 완납 여부 체크 및 등록
+        history.setDebtYn(checkHistoryFullPaid(memberId, debtPrice));
 
         return historyJpaStore.create(history);
+    }
+
+    /**
+     * 외상 완납 여부 체크 및 등록/수정
+     * @param memberId, price
+     */
+    private boolean checkHistoryFullPaid(long memberId, int price) {
+        if (price > 0) {
+            // 기존 외상 존재 여부 체크
+            Debt debt = debtService.findDebtsByMemberyId(memberId);
+            if(debt == null) { // 신규 외상 등록
+                DebtCdo debtCdo = new DebtCdo();
+                debtCdo.setDebtPrice(price);
+                debtCdo.setMemberId(memberId);
+                debtService.registerDebt(debtCdo);
+            } else{ // 기존 외상 수정
+                DebtUdo debtUdo = new DebtUdo();
+                debtUdo.setId(debt.getId());
+                debtUdo.setDebtPrice(price);
+                debtService.modifyDebt(debtUdo);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String modifyHistory(History history) {
@@ -79,6 +112,10 @@ public class HistoryService {
         History history = findHistoryById(historyUdo.getId());
 
         history.modifyAttributes(historyUdo);
+
+        // todo: payment, debt 수정 로직 추가 필요해보임
+        // ...
+
         return historyJpaStore.update(history);
     }
 

@@ -6,7 +6,6 @@ import com.jsya.dongbu.model.Debt;
 import com.jsya.dongbu.model.sdo.DebtCdo;
 import com.jsya.dongbu.model.sdo.DebtUdo;
 import com.jsya.dongbu.store.DebtJpaStore;
-import com.jsya.dongbu.store.MemberJpaStore;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +20,11 @@ import java.util.Optional;
 public class DebtService {
 
     private final DebtJpaStore debtJpaStore;
-    private final MemberJpaStore memberJpaStore;
 
     public long registerDebt(DebtCdo debtCdo) {
         Debt debt = new Debt(debtCdo);
 
-        debt.setPaidDate(LocalDateTime.now());
+        debt.setRegisteredDate(LocalDateTime.now());
         debt.setDebtPrice(debtCdo.getDebtPrice());
 
         return debtJpaStore.create(debt);
@@ -34,7 +32,6 @@ public class DebtService {
 
     public long modifyDebt(DebtUdo debtUdo) {
         Debt debt = findDebtById(debtUdo.getId());
-        debt.setPaidDate(LocalDateTime.now());
 
         debt.modifyAttributes(debtUdo);
         return debtJpaStore.update(debt);

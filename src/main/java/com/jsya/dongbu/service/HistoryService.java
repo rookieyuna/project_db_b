@@ -31,8 +31,9 @@ public class HistoryService {
     private final PaymentService paymentService;
     private final DebtService debtService;
 
+    LocalDateTime nowTime = LocalDateTime.now();
+
     public String registerHistory(HistoryCdo historyCdo) {
-        LocalDateTime nowTime = LocalDateTime.now();
         String historyId = historyCdo.genId(nowTime);
         long memberId = historyCdo.getMemberId();
         int prepaidPrice = 0;
@@ -63,18 +64,15 @@ public class HistoryService {
             paymentCdo.setMemberId(memberId);
             prepaidPrice = paymentCdo.getPaymentPrice();
             paymentService.registerPayment(paymentCdo);
+
+            // todo 기존에 미수가 있었으면 미수 금액 먼저 차감하는 걸로? - 고민... 미수는 아예 별개로 가야할지
+            checkHistoryFullPaid("paid", memberId, prepaidPrice);
         }
 
         // 미수 금액 = 총 결제 해야 할 금액 - 현재 지불 금액
         int debtPrice = totalPrice - prepaidPrice;
-
-        // 미수 여부 설정
-//        if(debtPrice > 0) {
-//            // 미수 금액 완납 여부 체크 및 등록
-//            history.setDebtYn(checkHistoryFullPaid(historyId, memberId, debtPrice));
-//        }
         // 미수 금액 완납 여부 체크 및 등록
-        history.setDebtYn(checkHistoryFullPaid(memberId, debtPrice));
+        history.setDebtYn(checkHistoryFullPaid("new", memberId, debtPrice));
 
         return historyJpaStore.create(history);
     }
@@ -83,19 +81,26 @@ public class HistoryService {
      * 외상 완납 여부 체크 및 등록/수정
      * @param memberId, price
      */
-    private boolean checkHistoryFullPaid(long memberId, int price) {
+    private boolean checkHistoryFullPaid(String flag, long memberId, int price) {
         if (price > 0) {
             // 기존 외상 존재 여부 체크
             Debt debt = debtService.findDebtsByMemberyId(memberId);
+
             if(debt == null) { // 신규 외상 등록
                 DebtCdo debtCdo = new DebtCdo();
                 debtCdo.setDebtPrice(price);
                 debtCdo.setMemberId(memberId);
                 debtService.registerDebt(debtCdo);
-            } else{ // 기존 외상 수정
+            } else { // 기존 외상 수정
                 DebtUdo debtUdo = new DebtUdo();
                 debtUdo.setId(debt.getId());
-                debtUdo.setDebtPrice(price);
+
+                if (flag.equals("paid")) { // 미수 금액 회수 시
+                    debtUdo.setDebtPrice(debt.getDebtPrice() - price); // 기존 미수 금액 차감
+                    debtUdo.setPaidDate(nowTime);
+                } else { // 추가 미수 발생 시
+                    debtUdo.setDebtPrice(debt.getDebtPrice() + price); // 기존 미수 금액에 추가
+                }
                 debtService.modifyDebt(debtUdo);
             }
             return true;

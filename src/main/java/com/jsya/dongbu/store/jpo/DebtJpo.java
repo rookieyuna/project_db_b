@@ -22,6 +22,7 @@ public class DebtJpo {
 
     @Id
     private long id; // 외상ID
+    private LocalDateTime registeredDate; // 최초 발생 날짜
     private LocalDateTime paidDate; // 갚은 날짜
     private int debtPrice; // 외상액
 

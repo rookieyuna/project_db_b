@@ -6,6 +6,7 @@ import com.jsya.dongbu.model.Debt;
 import com.jsya.dongbu.model.sdo.DebtCdo;
 import com.jsya.dongbu.model.sdo.DebtUdo;
 import com.jsya.dongbu.store.DebtJpaStore;
+import com.jsya.dongbu.store.MemberJpaStore;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.util.Optional;
 public class DebtService {
 
     private final DebtJpaStore debtJpaStore;
+    private final MemberJpaStore memberJpaStore;
 
     public long registerDebt(DebtCdo debtCdo) {
         Debt debt = new Debt(debtCdo);
@@ -39,6 +41,11 @@ public class DebtService {
 
     public List<Debt> findDebts() {
         return debtJpaStore.retrieveAll();
+    }
+
+    public Debt findDebtsByMemberyId(long memberId) {
+        Optional<Debt> debtOpt = debtJpaStore.retrieveByMember(memberId);
+        return debtOpt.orElseThrow(() -> new NotFoundException("해당 회원의 외상이 존재하지 않습니다."));
     }
 
     public Debt findDebtById(long debtId) {

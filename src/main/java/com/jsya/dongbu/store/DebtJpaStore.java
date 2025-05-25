@@ -1,13 +1,9 @@
 package com.jsya.dongbu.store;
 
 import com.jsya.dongbu.model.Debt;
-import com.jsya.dongbu.model.Payment;
 import com.jsya.dongbu.repository.DebtRepository;
-import com.jsya.dongbu.repository.PaymentRepository;
 import com.jsya.dongbu.store.impl.DebtStore;
-import com.jsya.dongbu.store.impl.PaymentStore;
 import com.jsya.dongbu.store.jpo.DebtJpo;
-import com.jsya.dongbu.store.jpo.PaymentJpo;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +33,12 @@ public class DebtJpaStore implements DebtStore {
     @Override
     public Optional<Debt> retrieve(long id) {
         Optional<DebtJpo> debtJpo = debtRepository.findById(id);
+        return debtJpo.map(DebtJpo::toDomain);
+    }
+
+    @Override
+    public Optional<Debt> retrieveByMember(long memberId) {
+        Optional<DebtJpo> debtJpo = debtRepository.findByMemberId(memberId);
         return debtJpo.map(DebtJpo::toDomain);
     }
 

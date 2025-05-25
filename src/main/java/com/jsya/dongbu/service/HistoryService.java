@@ -54,7 +54,7 @@ public class HistoryService {
                 })
                 .toList();
 
-        // payment 등록
+        // payment 등록 및 미수여부 설정
         PaymentCdo paymentCdo = historyCdo.getPaymentCdo();
         if (paymentCdo != null) {
             paymentCdo.setHistoryId(historyId);
@@ -64,9 +64,9 @@ public class HistoryService {
         }
 
         // 미수여부 설정
-        if(totalPrice - prepaidPrice > 0) {
-            history.setDebtYn(true);
-        }
+//        if(totalPrice - prepaidPrice > 0) {
+//            history.setDebtYn(true);
+//        }
 
         return historyJpaStore.create(history);
     }

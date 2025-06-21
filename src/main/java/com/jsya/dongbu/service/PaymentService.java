@@ -25,8 +25,8 @@ import java.util.Optional;
 public class PaymentService {
 
     private final PaymentJpaStore paymentJpaStore;
-    private final HistoryService historyService;
-    private final DebtService debtService;
+//    private final HistoryService historyService;
+//    private final DebtService debtService;
 
     public String registerPayment(PaymentCdo paymentCdo) {
         Payment payment = new Payment(paymentCdo);
@@ -52,40 +52,40 @@ public class PaymentService {
      * 외상 완납 여부 체크 및 등록
      * @param historyId
      */
-    private void checkHistoryFullPaid(String historyId) {
-        LocalDateTime nowTime = LocalDateTime.now();
-
-        History history = historyService.findHistoryById(historyId);
-        if(history == null) return;
-        int totalPrice = history.getTotalPrice();
-
-        List<Payment> payments = paymentJpaStore.retrieveListByHistory(historyId);
-        int totalPaymentPrice = payments.stream()
-                .mapToInt(Payment::getPaymentPrice)
-                .sum();
-
-        int debtPrice = totalPrice - totalPaymentPrice; // 외상액 = 현재 지불금액 - 현재까지 총 지불액
-        // 외상 등록
-        if (debtPrice > 0) {
-            // 기존 외상 존재 여부 체크
-            Debt debt = debtService.findDebtsByMemberyId(history.getMemberId());
-            if(debt == null) { // 신규 외상 등록
-                DebtCdo debtCdo = new DebtCdo();
-                debtCdo.setDebtPrice(debtPrice);
-                debtCdo.setMemberId(history.getMemberId());
-                debtService.registerDebt(debtCdo);
-            } else{ // 외상 수정
-                DebtUdo debtUdo = new DebtUdo(debt.getId(), debtPrice, nowTime);
-                debtService.modifyDebt(debtUdo);
-            }
-            history.setDebtYn(true);
-        } else {
-            history.setDebtYn(false);
-        }
-
-        // 현 시점에 history가 생성이 되어있지 않아 modify 불가능함... 고민 필요
-        historyService.modifyHistory(history);
-    }
+//    private void checkHistoryFullPaid(String historyId) {
+//        LocalDateTime nowTime = LocalDateTime.now();
+//
+//        History history = historyService.findHistoryById(historyId);
+//        if(history == null) return;
+//        int totalPrice = history.getTotalPrice();
+//
+//        List<Payment> payments = paymentJpaStore.retrieveListByHistory(historyId);
+//        int totalPaymentPrice = payments.stream()
+//                .mapToInt(Payment::getPaymentPrice)
+//                .sum();
+//
+//        int debtPrice = totalPrice - totalPaymentPrice; // 외상액 = 현재 지불금액 - 현재까지 총 지불액
+//        // 외상 등록
+//        if (debtPrice > 0) {
+//            // 기존 외상 존재 여부 체크
+//            Debt debt = debtService.findDebtsByMemberyId(history.getMemberId());
+//            if(debt == null) { // 신규 외상 등록
+//                DebtCdo debtCdo = new DebtCdo();
+//                debtCdo.setDebtPrice(debtPrice);
+//                debtCdo.setMemberId(history.getMemberId());
+//                debtService.registerDebt(debtCdo);
+//            } else{ // 외상 수정
+//                DebtUdo debtUdo = new DebtUdo(debt.getId(), debtPrice, nowTime);
+//                debtService.modifyDebt(debtUdo);
+//            }
+//            history.setDebtYn(true);
+//        } else {
+//            history.setDebtYn(false);
+//        }
+//
+//        // 현 시점에 history가 생성이 되어있지 않아 modify 불가능함... 고민 필요
+//        historyService.modifyHistory(history);
+//    }
 
     public List<Payment> findPayments() {
         return paymentJpaStore.retrieveAll();

@@ -31,7 +31,7 @@ public class HistoryService {
     private final PaymentService paymentService;
     private final DebtService debtService;
 
-    LocalDateTime nowTime = LocalDateTime.now();
+    private final LocalDateTime nowTime = LocalDateTime.now();
 
     public String registerHistory(HistoryCdo historyCdo) {
         String historyId = historyCdo.genId(nowTime);
@@ -98,6 +98,9 @@ public class HistoryService {
                 if (flag.equals("paid")) { // 미수 금액 회수 시
                     debtUdo.setDebtPrice(debt.getDebtPrice() - price); // 기존 미수 금액 차감
                     debtUdo.setPaidDate(nowTime);
+
+                    // todo 총 미수액 0원 시 미수 삭제 로직 추가 필요
+                    // ...
                 } else { // 추가 미수 발생 시
                     debtUdo.setDebtPrice(debt.getDebtPrice() + price); // 기존 미수 금액에 추가
                 }
